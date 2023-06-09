@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="dev.zwin.zen.mirror"
     android:installLocation="auto"
     android:versionCode="1"
     android:versionName="0.1.0">
@@ -22,16 +21,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.hardware.usb.host" />
 
     <queries>
-        <provider 
+        <provider
             android:authorities="org.khronos.openxr.runtime_broker;org.khronos.openxr.system_runtime_broker"
             tools:ignore="ExportedContentProvider" />
     </queries>
 
     <application
         android:allowBackup="false"
-        android:hasCode="false"
+        android:hasCode="true"
         android:label="@string/app_name"
         tools:ignore="MissingApplicationIcon">
 
@@ -39,7 +39,7 @@
         <meta-data android:name="com.oculus.supportedDevices" android:value="quest|quest2"/>
 
         <activity
-            android:name="android.app.NativeActivity"
+            android:name="dev.zwin.zen.mirror.ZenMirror"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
@@ -55,9 +55,18 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="com.oculus.intent.category.VR" />
                 <category android:name="org.khronos.openxr.intent.category.IMMERSIVE_HMD" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".PresentationWithMediaRouterActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>

@@ -10,6 +10,8 @@
 #include "remote-log-sink.h"
 #include "remote-loop.h"
 
+#include "libusb.h"
+
 using namespace zen::mirror;
 
 void
@@ -18,6 +20,10 @@ android_main(struct android_app *app)
   try {
     JNIEnv *env;
     app->activity->vm->AttachCurrentThread(&env, nullptr);
+
+      libusb_context *ctx = nullptr;
+      libusb_set_option(ctx, LIBUSB_OPTION_ANDROID_JAVAVM, app->activity->vm);        // important for Android
+      libusb_init(&ctx);
 
     InitializeLogger();
     zen::remote::InitializeLogger(std::make_unique<RemoteLogSink>());

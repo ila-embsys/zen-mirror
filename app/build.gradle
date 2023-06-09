@@ -14,19 +14,20 @@ ext.getRequiredProperty = { key ->
 }
 
 android {
+    namespace 'dev.zwin.zen.mirror'
     compileSdk 29
     ndkVersion getRequiredProperty("ndk.version")
 
     defaultConfig {
         applicationId "dev.zwin.zen.mirror"
-        minSdk 24
+        minSdk 26
         targetSdk 29
         versionCode 1
         versionName "0.1"
 
 
         externalNativeBuild {
-            def ovrOpenXrMobileSdkDir = getRequiredProperty("ovr_openxr_mobile_sdk.dir")
+            def openXrLoaderDir = getRequiredProperty("openxr_loader.dir")
             def protoc = getRequiredProperty("protoc")
             def grpcCppPlugin = getRequiredProperty("grpc_cpp_plugin")
             def grpcSysroot = getRequiredProperty("grpc_sysroot")
@@ -37,11 +38,12 @@ android {
 
             cmake {
                 arguments "-DPROJECT_DIR:STRING=${projectDir}",
-                    "-DOVR_OPENXR_MOBILE_SDK_DIR:STRING=${ovrOpenXrMobileSdkDir}",
+                    "-DOPENXR_LOADER_DIR:STRING=${openXrLoaderDir}",
                     "-DZEN_REMOTE_PROTOC_EXECUTABLE:STRING=${protoc}",
                     "-DZEN_REMOTE_GRPC_CPP_PLUGIN_EXECUTABLE:STRING=${grpcCppPlugin}",
                     "-DZEN_REMOTE_GRPC_SYSROOT:STRING=${grpcSysroot}",
-                    "-DAPP_NAME:STRING=${rootProject.getName()}"
+                    "-DAPP_NAME:STRING=${rootProject.getName()}",
+                    "-DANDROID_STL=c++_shared"
             }
         }
     }

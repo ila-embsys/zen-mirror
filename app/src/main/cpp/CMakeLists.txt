@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 project(zen_mirror C CXX)
 message(STATUS "Using CMake version: ${CMAKE_VERSION}")
 
@@ -58,16 +60,16 @@ find_library(egl_library NAMES EGL REQUIRED)
 
 
 # OpenXR loader
-set(OPENXR_BUILD_TYPE Release) 
+set(OPENXR_BUILD_TYPE Release)
 if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
-  set(OPENXR_BUILD_TYPE Debug) 
+  set(OPENXR_BUILD_TYPE Debug)
 endif()
 
 add_library(openxr_loader SHARED IMPORTED)
 set_property(
   TARGET openxr_loader
   PROPERTY
-    IMPORTED_LOCATION ${OVR_OPENXR_MOBILE_SDK_DIR}/OpenXR/Libs/Android/${ANDROID_ABI}/${OPENXR_BUILD_TYPE}/libopenxr_loader.so
+    IMPORTED_LOCATION ${OPENXR_LOADER_DIR}/libs/android.${ANDROID_ABI}/libopenxr_loader.so
 )
 
 
@@ -115,7 +117,8 @@ target_compile_options(
   zen_mirror
 
   PRIVATE
-    -Werror -Wall -Winvalid-pch -Wextra -Wpedantic
+    -Werror -Wall -Winvalid-pch -Wextra
+    # -Wpedantic
     -Wno-gnu-zero-variadic-macro-arguments
     -Wno-missing-field-initializers
 )
@@ -126,3 +129,9 @@ execute_process(
     ${CMAKE_BINARY_DIR}/compile_commands.json
     ${PROJECT_DIR}/.cxx/${CMAKE_BUILD_TYPE}/compile_commands.json
 )
+
+set("ANDROID")
+find_package(Libusb1 REQUIRED MODULE)
+
+target_include_directories(zen_mirror PUBLIC ${LIBUSB1_INCLUDE_DIRS})
+target_link_libraries(zen_mirror PRIVATE ${LIBUSB1_LIBRARIES})
